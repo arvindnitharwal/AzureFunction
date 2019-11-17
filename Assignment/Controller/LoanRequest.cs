@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Newtonsoft.Json;
 using Assignment.Business.Interfaces;
 using Assignment.Entities;
+using System.Collections.Generic;
 
 namespace Assignment.Controller {
     public class LoanRequest {
@@ -15,6 +16,7 @@ namespace Assignment.Controller {
          {
              _requestLogic=requestLogic;
          }
+         //insert the customer request
         [FunctionName ("loanrequest")]
         public async Task<IActionResult> InsertRequest (
             [HttpTrigger (AuthorizationLevel.Function, "post", Route = route)] HttpRequestMessage req) 
@@ -23,6 +25,7 @@ namespace Assignment.Controller {
             string response=await _requestLogic.InsertRequest(request);
             return new OkObjectResult(response);
         }
+        //update the customer request
         [FunctionName ("updaterequest")]
         public async Task<IActionResult> UpdateRequest (
             [HttpTrigger (AuthorizationLevel.Function, "put", Route = route)] HttpRequestMessage req) 
@@ -37,6 +40,15 @@ namespace Assignment.Controller {
         {
             var request=JsonConvert.DeserializeObject<DeleteRequest>(await req.Content.ReadAsStringAsync());
             string response=await _requestLogic.DeleteRequest(request);
+            return new OkObjectResult(response);
+        }
+        //fetch user based on filters
+        [FunctionName ("getuser")]
+        public async Task<IActionResult> GetUserRequest (
+            [HttpTrigger (AuthorizationLevel.Function, "get", Route = route)] HttpRequestMessage req) 
+        {
+            var request=JsonConvert.DeserializeObject<FetchRequest>(await req.Content.ReadAsStringAsync());
+            List<FetchResponse> response=await _requestLogic.GetUserRequest(request);
             return new OkObjectResult(response);
         }
     }
