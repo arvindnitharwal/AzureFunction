@@ -4,6 +4,7 @@ using Assignment.Business.Common;
 using Assignment.DataAccess.Interfaces;
 using Assignment.Entities;
 using Assignment.Business.Interfaces;
+using System.Collections.Generic;
 namespace Assignment.Business {
     public class RequestLogic :IRequestLogic
     {
@@ -40,6 +41,11 @@ namespace Assignment.Business {
                 return "Not Allowed";
             }
             return await _callRequest.DeleteRequest (request.MobileNumber);
+        }
+        public async Task<List<FetchResponse>> GetUserRequest (FetchRequest request) {
+            //return max 1000 record
+            request.Count=request.Count>1000 ? 1000 : request.Count;
+            return await _callRequest.GetFilteredresponse (request);
         }
     }
 }
